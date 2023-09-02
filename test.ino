@@ -23,13 +23,11 @@
 #define sensorI 25
 #define sensorO 23
 
-/*1 2 3 12 15 20 21 22*/
-
 int sensor[4] = {LOW,LOW,LOW,LOW};
 int i = 0,k=0;
 float l = 0;//计数或计时
 
-void setup() 
+void setup() //初始化部分
 {
   Serial.begin(9600);
   SensorInit();
@@ -37,30 +35,27 @@ void setup()
   ledcInit();
 }
 
-//21/22/23high 15hl 1/3high
-
-void loop() 
+void loop() //循环部分（程序运行时持续调用）
 {
   Sensor();
   run();
   Delay();
   Distance();
   //delay(500);
-  //Motor_Speed(80, -800, -80,800);
 }
 
-void ledcInit()
+void ledcInit() //初始化
 {
   ledcAttachPin(LF, 1);
   ledcAttachPin(LB, 2);
   ledcAttachPin(RF, 3);
   ledcAttachPin(RB, 4);
-  ledcSetup(1, 2000, 8); // 设置通道
+  ledcSetup(1, 2000, 8); 
   ledcSetup(2, 2000, 8);
   ledcSetup(3, 2000, 8);
   ledcSetup(4, 2000, 8);
 }
-void SensorInit()
+void SensorInit() //初始化
 {
   pinMode(sensor1, INPUT);
   pinMode(sensor2, INPUT);
@@ -69,7 +64,7 @@ void SensorInit()
   pinMode(sensorI, INPUT);
   pinMode(sensorO, OUTPUT);
 }
-void MotorInit()
+void MotorInit() //初始化
 {
   pinMode(LF1, OUTPUT);
   pinMode(LB1, OUTPUT);
@@ -86,7 +81,7 @@ void MotorInit()
   pinMode(LED, OUTPUT);
 }
 
-float Distance()
+float Distance() //返回障碍物距离
 {
   digitalWrite(sensorO, LOW);
   delayMicroseconds(4);
@@ -95,18 +90,22 @@ float Distance()
   digitalWrite(sensorO, LOW);
   l = pulseIn(sensorI, HIGH,20000)/58.0;
   //if(l!=0)
-  //  Serial.println("sensorI:"+String(sensorI)+"  sensorO:"+String(sensorO)+"  Distance:" + String(l));
+  //Serial.println("sensorI:"+String(sensorI)+"  sensorO:"+String(sensorO)+"  Distance:" + String(l));
   //delay(1000);
   return l;
 }
+
 void Sensor()
+/*探测黑线函数，从左到右为sensor[0]到sensor[3]，探测到黑线为值为0，否则值为1*/
 {
-  sensor [0] = digitalRead(sensor1); //黑线为高电平（1），白线为低电平（0)
+  sensor [0] = digitalRead(sensor1);
   sensor [1] = digitalRead(sensor2);
   sensor [2] = digitalRead(sensor3);
   sensor [3] = digitalRead(sensor4);
 }
+
 void Motor_Speed(int lf, int lb, int rf, int rb)
+/*四轮速度设置函数，四个参数顺序为左前、左后、右前、右后*/
 {
   if(lf>0)
   {
@@ -153,9 +152,10 @@ void Motor_Speed(int lf, int lb, int rf, int rb)
   ledcWrite(3, abs(rf));
   ledcWrite(4, abs(rb));
 }
-void run()
+
+void run()//主控函数
 {
-  if(Distance()<6.0)
+  if(Distance()<6.0)//避障
   {
     Motor_Speed(-120, -120, -120, -120);
     delay(200);
@@ -169,7 +169,7 @@ void run()
   }
   if (sensor [0] == 0 && sensor [1] == 0 && sensor [2] == 1 && sensor [3] == 1)
     Motor_Speed(0, 0, 180, 180);//左急
-    else if (sensor [0] == 0 && sensor [1] == 1 && sensor [2] == 1 && sensor [3] == 1)
+  else if (sensor [0] == 0 && sensor [1] == 1 && sensor [2] == 1 && sensor [3] == 1)
     Motor_Speed(0, 0, 240, 240); //左急急急
   else if (sensor [0] == 0 && sensor [1] == 0 && sensor [2] == 0 && sensor [3] == 1)
     Motor_Speed(60, 60, 160, 160); //左缓

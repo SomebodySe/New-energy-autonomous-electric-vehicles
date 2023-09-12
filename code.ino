@@ -141,7 +141,7 @@ void Motor_Speed(int lf, int lb, int rf, int rb)
   if(rb>0)
   {
     digitalWrite(RB1, HIGH);
-    digitalWrite(RB2, LFLOW);
+    digitalWrite(RB2, LOW);
   }
   else
   {

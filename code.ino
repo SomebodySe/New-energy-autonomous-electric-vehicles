@@ -40,7 +40,7 @@ void loop() //循环部分（程序运行时持续调用）
   Sensor();
   avoid();
   run();
-  Delay();
+  stop();
   Distance();
   //delay(500);
 }
@@ -195,7 +195,7 @@ void run()//主控函数
     sensor[0]=sensor[0];
 }
 
-void Delay()
+void stop()//T字路口停车函数
 {
   if (i > 20)
   {

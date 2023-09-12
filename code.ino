@@ -38,6 +38,7 @@ void setup() //初始化部分
 void loop() //循环部分（程序运行时持续调用）
 {
   Sensor();
+  avoid();
   run();
   Delay();
   Distance();
@@ -153,9 +154,9 @@ void Motor_Speed(int lf, int lb, int rf, int rb)
   ledcWrite(4, abs(rb));
 }
 
-void run()//主控函数
+void avoid()//避障
 {
-  if(Distance()<6.0)//避障
+  if(Distance()<6.0)
   {
     Motor_Speed(-120, -120, -120, -120);
     delay(200);
@@ -167,6 +168,10 @@ void run()//主控函数
     delay(600);
     sensor[0]=1;sensor[1]=1;sensor[2]=1;sensor[3]=1;
   }
+}
+
+void run()//主控函数
+{
   if (sensor [0] == 0 && sensor [1] == 0 && sensor [2] == 1 && sensor [3] == 1)
     Motor_Speed(0, 0, 180, 180);//左急
   else if (sensor [0] == 0 && sensor [1] == 1 && sensor [2] == 1 && sensor [3] == 1)
